@@ -1,0 +1,31 @@
+name: "Test pip install"
+description: "Test installing the wheel package using pip"
+author: "Frequenz Energy-as-a-Service GmbH"
+
+# Refer to the following link(s) for more information on inputs:
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#inputs
+inputs:
+  python_version:
+    description: >
+      The Python version to use. This is passed to the `actions/setup-python`.
+    required: true
+  wheel_files:
+    description: >
+      The wheel files to install. Default: `dist/*.whl`.
+
+      Will be passed directly to `pip install` via a bash shell, so it can
+      contain shell expansions, etc.
+    required: false
+    default: "dist/*.whl"
+
+
+# Refer to the following link(s) for more information on the composite run steps:
+# https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions#runs
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Python
+      uses: frequenz-floss/setup-python-with-deps@v0.x.x
+      with:
+        python-version: ${{ input.python_version }}
+        dependencies: ${{ input.wheel_files }}
